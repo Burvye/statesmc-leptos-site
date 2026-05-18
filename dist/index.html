@@ -3,7 +3,7 @@
     
     <head>
         <title>Document</title>
-    <link rel="modulepreload" href="/site-website-3df95090dcda8565.js" crossorigin="anonymous" integrity="sha384-27957TvrsUFWoQ9fdXmpLK3tptl3qERkl91+rfU2TBgPcGNoTrj4ckLDvCa9gFBw"><link rel="preload" href="/site-website-3df95090dcda8565_bg.wasm" crossorigin="anonymous" integrity="sha384-h42MnP7z8fyx6ylZ3kCx/Q4cd0lzFPgKBGpW7f+/J9P/1er3ksWGvyWkvJTGnVA2" as="fetch" type="application/wasm"></head>
+    <link rel="modulepreload" href="/site-website-7e93da290d1e8183.js" crossorigin="anonymous" integrity="sha384-hqPWx67StpU139s849smPeWIsMspa2EDoJTPosnftZNoXzO0E4ZMae2EoB9mwOQf"><link rel="preload" href="/site-website-7e93da290d1e8183_bg.wasm" crossorigin="anonymous" integrity="sha384-u/gDzkQq4pviCtv+6FyFMaPUK95cy4eJkBE/iIlcoltknyiHREIhrwfFT3OtI0Vy" as="fetch" type="application/wasm"></head>
     <style>
         :root {
             --bg: #120f10;
@@ -44,12 +44,22 @@
         .parent {
             display: grid;
         }
+        .body-parent {
+            display: grid;
+            grid-template-columns: 1fr, 2fr;
+        }
         .simage {
             background-image: url("assets/statesmc.png");
             background-size: cover;
         }
         .header {
             grid-template-columns: 1fr 3fr;
+        }
+        .butt {
+            background-color: var(--cyan);
+        }
+        .space {
+            margin: 4mm 4mm;
         }
         .body {
             grid-template-columns: 1fr 3fr;
@@ -119,8 +129,8 @@
     </style>
     <body>
 <script type="module">
-import init, * as bindings from '/site-website-3df95090dcda8565.js';
-const wasm = await init({ module_or_path: '/site-website-3df95090dcda8565_bg.wasm' });
+import init, * as bindings from '/site-website-7e93da290d1e8183.js';
+const wasm = await init({ module_or_path: '/site-website-7e93da290d1e8183_bg.wasm' });
 
 
 window.wasmBindings = bindings;
