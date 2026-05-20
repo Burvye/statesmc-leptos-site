@@ -8,7 +8,7 @@ struct Video {
 #[component]
 pub fn VideoSection() -> impl IntoView {
     let videos = video_choices();
-    let (selected_id, set_selected_id) = signal(videos[0].id);
+    let (id, set_id) = signal(videos[0].id);
     let (url, set_url) = signal(video_url_for(videos[0].id));
 
     view! {
@@ -16,12 +16,7 @@ pub fn VideoSection() -> impl IntoView {
             <VideoPlayer url=url />
             <div class="body-two">
                 <div id="main-button-info">"Click one of these buttons below!"</div>
-                <VideoButtons
-                    videos=videos
-                    selected_id=selected_id
-                    set_selected_id=set_selected_id
-                    set_url=set_url
-                />
+                <VideoButtons videos=videos selected_id=id set_selected_id=set_id set_url=set_url />
             </div>
         </div>
     }

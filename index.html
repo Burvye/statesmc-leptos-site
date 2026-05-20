@@ -32,9 +32,21 @@
             font-family: Helvetica;
             font-weight: bold;
         }
+        .limage {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+        }
         .title1 {
             font-size: 350%;
-            color: #cc3900;
+            color: white;
+            text-shadow:
+                -2px -2px 0 var(--surface),
+                2px -2px 0 var(--surface),
+                -2px 2px 0 var(--surface),
+                2px 2px 0 var(--surface);
             border-radius: 15px;
         }
         .title2 {
@@ -46,7 +58,7 @@
         }
         .body-parent {
             display: grid;
-            grid-template-columns: 1fr, 2fr;
+            grid-template-columns: 1fr 2fr;
         }
         .simage {
             background-image: url("assets/statesmc.png");
@@ -86,6 +98,7 @@
             grid-template-columns: repeat(2, 1fr);
         }
         .text {
+            display: grid;
             color: var(--text);
             font-family: Helvetica;
             font-weight: 900;
@@ -117,6 +130,10 @@
             display: grid;
             background-color: var(--red);
             place-content: center;
+        }
+        .scroll-container {
+            height: 100%;
+            overflow-y: scroll;
         }
         #main-button-info {
             font-family: Helvetica;
