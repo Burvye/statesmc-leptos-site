@@ -38,7 +38,16 @@ fn About() -> impl IntoView {
             <div class="limage" style:background-image=format!("url({})", image.get().image)>
                 <div class="scroll-container">
                     // TODO: We are here
-                    {butts.into_iter().map(|b| view! { <p>"test"</p> }).collect_view()}
+                    {butts
+                        .into_iter()
+                        .map(|b| {
+                            view! {
+                                <li>
+                                    <button class="butt-list">{b.label}</button>
+                                </li>
+                            }
+                        })
+                        .collect_view()}
                 </div>
             </div>
         </div>
