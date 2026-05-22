@@ -35,7 +35,10 @@ fn About() -> impl IntoView {
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                 "
             </p>
-            <div class="limage" style:background-image=format!("url({})", image.get().image)>
+            <div
+                class="limage"
+                style:background-image=move || format!("url({})", image.get().image)
+            >
                 <div class="scroll-container">
                     // TODO: We are here
                     {butts
@@ -43,7 +46,13 @@ fn About() -> impl IntoView {
                         .map(|b| {
                             view! {
                                 <li>
-                                    <button class="butt-list">{b.label}</button>
+                                    // TODO: change the image id based on the id at the moment.
+                                    <button
+                                        class="butt-list"
+                                        on:click=move |_| set_image.set(image_selector(b.id))
+                                    >
+                                        {b.label}
+                                    </button>
                                 </li>
                             }
                         })
@@ -65,12 +74,6 @@ struct Button {
     label: String,
 }
 
-#[derive(Clone)]
-struct Image {
-    image: &'static str,
-    message: &'static str,
-}
-
 fn button_generator() -> Vec<Button> {
     let mut buttons = vec![];
     for i in 1..=20 {
@@ -82,15 +85,28 @@ fn button_generator() -> Vec<Button> {
     buttons
 }
 
+#[derive(Clone)]
+struct Image {
+    image: String,
+    message: &'static str,
+}
+
+impl Image {
+    fn new(id: i32, description: &'static str) -> Image {
+        Image {
+            image: format!("assets/backs/{}.png", id),
+            message: description,
+        }
+    }
+}
+
 fn image_selector(id: i32) -> Image {
     match id {
-        1 => Image {
-            image: "assets/backs/1.png",
-            message: "EstGlory dominating the hardpoint",
-        },
+        1 => Image::new(1, "Estglory Dominating the Hardpoint"),
+        2 => Image::new(2, "Estglory in Battle"),
         _ => Image {
-            image: "problem",
-            message: "please kill yourself",
+            image: format!("67"),
+            message: "end it all",
         },
     }
 }
