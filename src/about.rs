@@ -1,4 +1,3 @@
-use leptos::mount::mount_to_body;
 use leptos::prelude::*;
 use leptos_router::components::*;
 use leptos_router::path;
@@ -17,7 +16,7 @@ pub fn AboutPage() -> impl IntoView {
 
 #[component]
 fn About() -> impl IntoView {
-    let (image, set_image) = signal(image_selector(1));
+    let (image, set_image) = signal(image_selector(1 as usize));
     let butts = button_generator();
     view! {
         <div class="header parent">
@@ -49,7 +48,9 @@ fn About() -> impl IntoView {
                                     // TODO: change the image id based on the id at the moment.
                                     <button
                                         class="butt-list"
-                                        on:click=move |_| set_image.set(image_selector(b.id))
+                                        on:click=move |_| {
+                                            set_image.set(image_selector(b.id as usize))
+                                        }
                                     >
                                         {b.label}
                                     </button>
@@ -92,7 +93,7 @@ struct Image {
 }
 
 impl Image {
-    fn new(id: i32, description: &'static str) -> Image {
+    fn new(id: usize, description: &'static str) -> Image {
         Image {
             image: format!("assets/backs/{}.png", id),
             message: description,
@@ -100,13 +101,15 @@ impl Image {
     }
 }
 
-fn image_selector(id: i32) -> Image {
-    match id {
-        1 => Image::new(1, "Estglory Dominating the Hardpoint"),
-        2 => Image::new(2, "Estglory in Battle"),
-        _ => Image {
-            image: format!("67"),
-            message: "end it all",
-        },
-    }
+fn image_selector(id: usize) -> Image {
+    const DESCRIPTIONS: &[&str] = &["Estglory dominating the hardpoint", "Estglory in battle"];
+    id.checked_sub(1)
+        .and_then(|i| DESCRIPTIONS.get(i))
+        .map_or_else(
+            || Image {
+                image: format!("67"),
+                message: "end it all",
+            },
+            |desc| Image::new(id, desc),
+        )
 }
