@@ -89,11 +89,11 @@ fn button_generator() -> Vec<Button> {
 #[derive(Clone)]
 struct Image {
     image: String,
-    message: &'static str,
+    message: String,
 }
 
 impl Image {
-    fn new(id: usize, description: &'static str) -> Image {
+    fn new(id: usize, description: String) -> Image {
         Image {
             image: format!("assets/backs/{}.png", id),
             message: description,
@@ -103,13 +103,14 @@ impl Image {
 
 fn image_selector(id: usize) -> Image {
     const DESCRIPTIONS: &[&str] = &["Estglory dominating the hardpoint", "Estglory in battle"];
-    id.checked_sub(1)
-        .and_then(|i| DESCRIPTIONS.get(i))
-        .map_or_else(
-            || Image {
-                image: format!("67"),
-                message: "end it all",
-            },
-            |desc| Image::new(id, desc),
-        )
+    image_selector_output(DESCRIPTIONS, id)
+}
+fn image_selector_output(descs: &[&str], id: usize) -> Image {
+    id.checked_sub(1).and_then(|i| descs.get(i)).map_or_else(
+        || Image {
+            image: format!("67"),
+            message: String::from("end it all"),
+        },
+        |desc| Image::new(id, desc.to_string()),
+    )
 }
