@@ -3,6 +3,7 @@ use leptos::prelude::*;
 use leptos_router::components::*;
 use leptos_router::path;
 
+mod adventure;
 mod about;
 mod elements;
 mod mainpage;
@@ -17,6 +18,7 @@ fn App() -> impl IntoView {
         <Router>
             <Routes fallback=|| view! { <p>"Page not found."</p> }>
                 <Route path=path!("/") view=mainpage::HomePage />
+                <Route path=path!("/adventure") view=adventure::AdventurePage />
                 <Route path=path!("/about") view=about::AboutPage />
             </Routes>
         </Router>

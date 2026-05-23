@@ -38,14 +38,13 @@ fn About() -> impl IntoView {
                 class="limage"
                 style:background-image=move || format!("url({})", image.get().image)
             >
+                <div class="text">{move || image.get().message}</div>
                 <div class="scroll-container">
-                    // TODO: We are here
                     {butts
                         .into_iter()
                         .map(|b| {
                             view! {
                                 <li>
-                                    // TODO: change the image id based on the id at the moment.
                                     <button
                                         class="butt-list"
                                         on:click=move |_| {

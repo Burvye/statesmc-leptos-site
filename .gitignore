@@ -1,2 +1,7 @@
 /target
 /dist
+adventure-dist/index.html
+adventure-dist/adventure-756a03f0698c1ab0_bg.wasm
+src/adventure.rs
+adventure-dist/adventure-756a03f0698c1ab0.js
+adventure-dist/

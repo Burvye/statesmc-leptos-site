@@ -92,6 +92,10 @@ fn link_choices() -> Vec<Link> {
         label: "About",
         href: "/about",
     });
+    links.push(Link {
+        label: "Adventure",
+        href: "/adventure",
+    });
 
     links
 }
