@@ -1,7 +1,6 @@
 use crate::elements;
 use leptos::prelude::*;
 use leptos_router::components::*;
-use web_sys::Audio;
 #[component]
 pub fn HomePage() -> impl IntoView {
     view! {
@@ -65,12 +64,16 @@ fn MapSection() -> impl IntoView {
 #[component]
 fn LinkSection() -> impl IntoView {
     let links = link_choices();
+    let audio_ref = NodeRef::<leptos::html::Audio>::new();
     let play_sound = move |_| {
-        let audio = Audio::new_with_str("/magic.mp3").expect("Failed to magically sound");
-        let _ = audio.play();
+        if let Some(audio) = audio_ref.get() {
+            audio.set_current_time(0.0);
+            let _ = audio.play();
+        }
     };
     view! {
         <div>
+            <audio node_ref=audio_ref src="/assets/magic.mp3" preload="auto"></audio>
             <div>
                 {links
                     .into_iter()
@@ -83,7 +86,7 @@ fn LinkSection() -> impl IntoView {
                             </button>
                         }
                     })
-                    .collect::<Vec<_>>()}
+                    .collect_view()}
             </div>
         </div>
     }
