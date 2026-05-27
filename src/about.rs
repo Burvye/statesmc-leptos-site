@@ -62,7 +62,10 @@ fn About() -> impl IntoView {
         </div>
         <div>
             <A href="https://github.com/Burvye/statesmc-leptos-site/tree/main">
-                <button class="github-link"></button>
+                <button class="github-link link-box"></button>
+            </A>
+            <A href="https://discord.gg/RpAKqaz7by">
+                <button class="discord-link link-box"></button>
             </A>
         </div>
     }

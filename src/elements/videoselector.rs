@@ -57,12 +57,14 @@ fn VideoButtons(
                                 set_url.set(video_url_for(video.id));
                             }
                             class="main-button"
+                            class:active=move || selected_id.get() == video.id
+                            class:inactive=move || selected_id.get() != video.id
                         >
                             {video.label}
                         </button>
                     }
                 })
-                .collect::<Vec<_>>()}
+                .collect::<Vec<_>>()} <p>{selected_id}</p>
         </div>
     }
 }
@@ -89,7 +91,7 @@ fn video_url_for(id: i32) -> &'static str {
         4 => "https://www.youtube.com/embed/cqd00g20bkI?si=znIN52dyM1A07JH9",
         5 => "https://www.youtube.com/embed/HlnNSW_Yi70?si=krmzKolIwR7EZOAq",
         6 => "https://www.youtube.com/embed/wcRfV6ahkh0?si=LeE3M3i8_Va-XDAl",
-        7 => "https://www.youtube.com/embed/3ZTdoWPDiOc?si=33aJbEe2FcbV5Fga",
+        7 => "https://www.youtube.com/embed/0iSz6aDAZBA?si=uBRqGe-sy0E4_X-o",
         8 => "https://www.youtube.com/embed/CdYtavp2h24?si=oBFzoC4V169_UVxp",
         9 => "https://www.youtube.com/embed/Lcupxa72cLk?si=s2IgYDHDwJKvt4rB",
         10 => "https://www.youtube.com/embed/cqd00g20bkI?si=znIN52dyM1A07JH9",

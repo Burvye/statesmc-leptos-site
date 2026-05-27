@@ -40,8 +40,14 @@
             width: 100%;
             aspect-ratio: 16 / 9;
         }
+        .active {
+            background-color: red;
+        }
+        .inactive {
+            background-color: var(--cyan);
+        }
         .title1 {
-            font-size: 350%;
+            font-size: 250%;
             color: white;
             text-shadow:
                 -2px -2px 0 var(--surface),
@@ -71,12 +77,17 @@
         .butt {
             background-color: var(--cyan);
         }
-        .github-link {
-            background-image: url("assets/github.png");
+        .link-box {
             background-color: var(--red);
             background-size: cover;
             height: 20mm;
             aspect-ratio: 1 / 1;
+        }
+        .github-link {
+            background-image: url("assets/github.png");
+        }
+        .discord-link {
+            background-image: url("assets/discord.webp");
         }
         .space {
             margin: 4mm 4mm;
@@ -138,7 +149,6 @@
             font-family: Helvetica;
         }
         .main-button {
-            background-color: var(--cyan);
             margin: 2mm 2mm;
             padding: 5%;
             font-family: monospace;

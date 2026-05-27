@@ -1,13 +1,13 @@
 use crate::elements;
 use leptos::prelude::*;
 use leptos_router::components::*;
+use web_sys::Audio;
 #[component]
 pub fn HomePage() -> impl IntoView {
     view! {
         <Header />
         <Body />
         <MapSection />
-        <LinkSection />
     }
 }
 
@@ -65,6 +65,10 @@ fn MapSection() -> impl IntoView {
 #[component]
 fn LinkSection() -> impl IntoView {
     let links = link_choices();
+    let play_sound = move |_| {
+        let audio = Audio::new_with_str("/magic.mp3").expect("Failed to magically sound");
+        let _ = audio.play();
+    };
     view! {
         <div>
             <div>
@@ -72,8 +76,10 @@ fn LinkSection() -> impl IntoView {
                     .into_iter()
                     .map(|link| {
                         view! {
-                            <button class="text butt title title1 space">
-                                <A href=link.href>{link.label}</A>
+                            <button class="text butt title title1 space" on:click=play_sound>
+                                <A href=link.href target="_blank">
+                                    {link.label}
+                                </A>
                             </button>
                         }
                     })
@@ -95,6 +101,10 @@ fn link_choices() -> Vec<Link> {
     links.push(Link {
         label: "Adventure",
         href: "/adventure",
+    });
+    links.push(Link {
+        label: "Discord",
+        href: "https://discord.gg/RpAKqaz7by",
     });
 
     links
