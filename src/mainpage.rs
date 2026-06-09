@@ -95,20 +95,19 @@ struct Link {
     label: &'static str,
     href: &'static str,
 }
+macro_rules! plinsh {
+    ($name:expr, $url:expr, $vec:expr) => {
+        $vec.push(Link {
+            label: $name,
+            href: $url,
+        })
+    };
+}
 fn link_choices() -> Vec<Link> {
-    let mut links = vec![];
-    links.push(Link {
-        label: "About",
-        href: "/about",
-    });
-    links.push(Link {
-        label: "Adventure",
-        href: "/adventure",
-    });
-    links.push(Link {
-        label: "Discord",
-        href: "https://discord.gg/RpAKqaz7by",
-    });
-
-    links
+    let mut l = vec![];
+    plinsh!("About", "/about", l);
+    plinsh!("Adventure", "/adventure", l);
+    plinsh!("Discord", "https://discord.gg/RpAKqaz7by", l);
+    plinsh!("Youtube", "https://www.youtube.com/@burvy", l);
+    l
 }
