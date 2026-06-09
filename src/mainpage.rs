@@ -107,6 +107,7 @@ fn link_choices() -> Vec<Link> {
     let mut l = vec![];
     plinsh!("About", "/about", l);
     plinsh!("Adventure", "/adventure", l);
+    plinsh!("Games", "/gamepage", l);
     plinsh!("Discord", "https://discord.gg/RpAKqaz7by", l);
     plinsh!("Youtube", "https://www.youtube.com/@burvy", l);
     l
