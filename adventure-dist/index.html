@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Adventure</title>
+        <style>
+            html,
+            body,
+            canvas {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                overflow: hidden;
+                background: #000;
+            }
+        </style>
+        
+<script type="module">
+import init, * as bindings from '/adventure-dist/adventure-312e4a795d32b3e5.js';
+const wasm = await init({ module_or_path: '/adventure-dist/adventure-312e4a795d32b3e5_bg.wasm' });
+
+
+window.wasmBindings = bindings;
+
+
+dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
+
+</script>
+    <link rel="modulepreload" href="/adventure-dist/adventure-312e4a795d32b3e5.js" crossorigin="anonymous" integrity="sha384-+cQUfPimzHQ+x9QDIwgEsLc9LstbLVdeh5tYXO7U02l564e1bf5dHJCJt5C0OmC7"><link rel="preload" href="/adventure-dist/adventure-312e4a795d32b3e5_bg.wasm" crossorigin="anonymous" integrity="sha384-HhougAPROjhkDiwA/rsA8Lbg+dlxRHpoEJvFSsZWQ9mzS6PfTrCbiCqNn5XN0qaS" as="fetch" type="application/wasm"></head>
+    <body>
+        <canvas id="adventure-canvas"></canvas>
+    </body>
+</html>
