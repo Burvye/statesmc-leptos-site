@@ -1,6 +1,4 @@
 use leptos::prelude::*;
-use leptos_router::components::*;
-use leptos_router::path;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 struct Pos(u32, u32);
@@ -13,8 +11,7 @@ pub fn GamePage() -> impl IntoView {
             style:position="absolute"
             style:top=move || format!("{}px", pos.get().0)
             style:left=move || format!("{}px", pos.get().1)
-        >
-            67
-        </div>
+        ></div>
+        <button on:click=move |_| { set_pos.set(Pos(6, 7)) }></button>
     }
 }
