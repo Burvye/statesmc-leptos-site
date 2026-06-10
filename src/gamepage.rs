@@ -26,6 +26,8 @@ pub fn GamePage() -> impl IntoView {
             style:position="absolute"
             style:top=move || format!("{}px", pos.get().0)
             style:left=move || format!("{}px", pos.get().1)
-        ></div>
+        >
+            67
+        </div>
     }
 }
