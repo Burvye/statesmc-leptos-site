@@ -26,7 +26,7 @@ pub fn GamePage() -> impl IntoView {
         if ev.code() == "Space" && !ev.repeat() {
             ev.prevent_default();
             set_vel.update(|vel| {
-                vel.y = -20;
+                vel.y = -20 * (grounded.get() as i16);
             });
         }
     });
