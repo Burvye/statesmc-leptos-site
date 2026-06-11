@@ -36,7 +36,7 @@ pub fn GamePage() -> impl IntoView {
             vel.x = vel.x.clamp(-WALKSPEED, WALKSPEED);
         });
     });
-    window_event_listener(ev::keyup, move |ev| {
+    window_event_listener(ev::keyup, move |_| {
         if grounded.get() {
             set_vel.update(|vel| {
                 vel.x = 0;
