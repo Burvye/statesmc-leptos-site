@@ -23,7 +23,7 @@ pub fn GamePage() -> impl IntoView {
     // this controls the player button thing
     let (toggle, set_toggle) = signal(false);
     // TODO: use this to detect whether the player is moving or not
-    let mut (moving, set_moving) = signal(false);
+    let (moving, set_moving) = signal(false);
 
     window_event_listener(ev::keydown, move |ev| {
         if ev.code() == "Space" && !ev.repeat() && grounded.get() {
