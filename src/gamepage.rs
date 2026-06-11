@@ -78,10 +78,12 @@ pub fn GamePage() -> impl IntoView {
         <div
             class="player"
             style:position="absolute"
+            class:player-green=move || toggle.get()
+            class:player-red=move || !toggle.get()
             style:top=move || format!("{}px", pos.get().y)
             style:left=move || format!("{}px", pos.get().x)
         >
-            <button>67</button>
+            <button on:click=move |_| set_toggle.set(!toggle.get())>67</button>
         </div>
     }
 }
