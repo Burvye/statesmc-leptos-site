@@ -21,12 +21,14 @@ pub fn GamePage() -> impl IntoView {
     let (pos, set_pos) = signal(Pos { x: 0, y: 0 });
     let (vel, set_vel) = signal(Vel {x: 0, y: 0 });
     let (grounded, set_grounded) = signal(false);
+    // this controls the player button thing
+    let (toggle, set_toggle) = signal(false);
 
     window_event_listener(ev::keydown, move |ev| {
-        if ev.code() == "Space" && !ev.repeat() {
+        if ev.code() == "Space" && !ev.repeat() && grounded.get() {
             ev.prevent_default();
             set_vel.update(|vel| {
-                vel.y = -20 * (grounded.get() as i16);
+                vel.y = -20;
             });
         }
     });
@@ -46,18 +48,11 @@ pub fn GamePage() -> impl IntoView {
     leptos::task::spawn_local(async move {
         loop {
             TimeoutFuture::new(16).await;
-
-            let new_x = pos.get().x + vel.get().x;
-            let mut new_y = pos.get().y;
-            // TODO: more usable grounded
-            if new_y >= GROUND {
-                set_grounded.set(true);
-            } else {
-                set_grounded.set(false);
-            }
-            // GRAVITY STUFFS
             let mut gforce = vel.get().y + 1;
-            new_y += gforce;
+            let new_x = pos.get().x + vel.get().x;
+            let mut new_y = pos.get().y + gforce;
+            set_grounded.set(is_grounded(new_y));
+            // GRAVITY STUFFS
             if grounded.get() {
                 new_y = GROUND;
                 gforce = 0;
@@ -70,6 +65,14 @@ pub fn GamePage() -> impl IntoView {
             set_pos.set(Pos { x: new_x, y: new_y,});
         }
     });
+    fn is_grounded(y: i16) -> bool {
+        // more usable grounded
+        if y >= GROUND {
+            true
+        } else {
+            false
+        }
+    }
 
     view! {
         <div
@@ -78,7 +81,7 @@ pub fn GamePage() -> impl IntoView {
             style:top=move || format!("{}px", pos.get().y)
             style:left=move || format!("{}px", pos.get().x)
         >
-            67
+            <button>67</button>
         </div>
     }
 }
