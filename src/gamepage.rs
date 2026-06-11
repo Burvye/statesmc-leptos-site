@@ -50,7 +50,6 @@ pub fn GamePage() -> impl IntoView {
             let mut gforce = vel.get().y + 1;
             let new_x = pos.get().x + vel.get().x;
             let mut new_y = pos.get().y + gforce;
-            // TODO: some grounded check
             if new_y >= GROUND {
                 set_grounded.set(true);
             } else {
