@@ -49,6 +49,7 @@ pub fn GamePage() -> impl IntoView {
 
             let new_x = pos.get().x + vel.get().x;
             let mut new_y = pos.get().y;
+            // TODO: more usable grounded
             if new_y >= GROUND {
                 set_grounded.set(true);
             } else {
