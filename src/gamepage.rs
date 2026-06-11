@@ -22,25 +22,14 @@ pub fn GamePage() -> impl IntoView {
     let (grounded, set_grounded) = signal(false);
     // this controls the player button thing
     let (toggle, set_toggle) = signal(false);
+    // TODO: use this to detect whether the player is moving or not
+    let mut (moving, set_moving) = signal(false);
 
     window_event_listener(ev::keydown, move |ev| {
         if ev.code() == "Space" && !ev.repeat() && grounded.get() {
             ev.prevent_default();
             set_vel.update(|vel| {
                 vel.y = -20;
-            });
-        }
-    });
-    window_event_listener(ev::keydown, move |ev| {
-        set_vel.update(|vel| {
-            vel.x += ((ev.code() == "KeyD") as i16 - (ev.code() == "KeyA") as i16) * WALKSPEED;
-            vel.x = vel.x.clamp(-WALKSPEED, WALKSPEED);
-        });
-    });
-    window_event_listener(ev::keyup, move |ev| {
-        if (ev.code() == "KeyA" || ev.code() == "KeyD") && grounded.get(){
-            set_vel.update(|vel| {
-                vel.x = 0;
             });
         }
     });
@@ -61,6 +50,18 @@ pub fn GamePage() -> impl IntoView {
             });
             // END GRAVITY STUFFS
 
+            window_event_listener(ev::keydown, move |ev| {
+                set_vel.update(|vel| {
+                    if ev.code() == "KeyD" || ev.code() == "KeyA" {
+                        if ev.code() == "KeyD" {
+                            vel.x += WALKSPEED;
+                        } else {
+                            vel.x -= WALKSPEED;
+                        }
+                        vel.x = vel.x.clamp(-WALKSPEED, WALKSPEED);
+                    }
+                });
+            });
             set_pos.set(Pos { x: new_x, y: new_y,});
         }
     });
