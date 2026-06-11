@@ -1,7 +1,6 @@
 use leptos::prelude::*;
 use leptos::ev;
 use gloo_timers::future::TimeoutFuture;
-use leptos::svg::g;
 
 const GROUND: i16 = 500;
 const WALKSPEED: i16 = 10;
