@@ -47,14 +47,16 @@ pub fn GamePage() -> impl IntoView {
         loop {
             TimeoutFuture::new(16).await;
 
-            let mut gforce = vel.get().y + 1;
             let new_x = pos.get().x + vel.get().x;
             let mut new_y = pos.get().y + gforce;
+
             if new_y >= GROUND {
                 set_grounded.set(true);
             } else {
                 set_grounded.set(false);
             }
+            // GRAVITY STUFFS
+            let mut gforce = vel.get().y + 1;
             if grounded.get() {
                 new_y = GROUND;
                 gforce = 0;
@@ -62,6 +64,8 @@ pub fn GamePage() -> impl IntoView {
             set_vel.update(|vel| {
                 vel.y = gforce;
             });
+            // END GRAVITY STUFFS
+
             set_pos.set(Pos { x: new_x, y: new_y,});
         }
     });
