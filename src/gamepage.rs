@@ -25,8 +25,6 @@ pub fn GamePage() -> impl IntoView {
     // to detect if left or right pressed
     let (lp, set_lp) = signal(false);
     let (rp, set_rp) = signal(false);
-    // TODO: use this to detect whether the player is moving or not
-    let (moving, set_moving) = signal(false);
 
     window_event_listener(ev::keydown, move |ev| {
         if ev.code() == "Space" && !ev.repeat() && grounded.get() {
