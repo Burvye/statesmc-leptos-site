@@ -22,6 +22,9 @@ pub fn GamePage() -> impl IntoView {
     let (grounded, set_grounded) = signal(false);
     // this controls the player button thing
     let (toggle, set_toggle) = signal(false);
+    // to detect if left or right pressed
+    let (lp, set_lp) = signal(false);
+    let (rp, set_rp) = signal(false);
     // TODO: use this to detect whether the player is moving or not
     let (moving, set_moving) = signal(false);
 
@@ -38,7 +41,8 @@ pub fn GamePage() -> impl IntoView {
             TimeoutFuture::new(16).await;
             let mut gforce = vel.get().y + 1;
             let new_x = pos.get().x + vel.get().x;
-            let mut new_y = pos.get().y + gforce;
+            // let mut new_y = pos.get().y + gforce
+            // ;
             set_grounded.set(is_grounded(new_y));
             // GRAVITY STUFFS
             if grounded.get() {
@@ -49,7 +53,6 @@ pub fn GamePage() -> impl IntoView {
                 vel.y = gforce;
             });
             // END GRAVITY STUFFS
-
             window_event_listener(ev::keydown, move |ev| {
                 set_vel.update(|vel| {
                     if ev.code() == "KeyD" || ev.code() == "KeyA" {
