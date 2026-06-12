@@ -41,8 +41,7 @@ pub fn GamePage() -> impl IntoView {
             TimeoutFuture::new(16).await;
             let mut gforce = vel.get().y + 1;
             let new_x = pos.get().x + vel.get().x;
-            // let mut new_y = pos.get().y + gforce
-            // ;
+            let mut new_y = pos.get().y + gforce;
             set_grounded.set(is_grounded(new_y));
             // GRAVITY STUFFS
             if grounded.get() {
@@ -53,18 +52,30 @@ pub fn GamePage() -> impl IntoView {
                 vel.y = gforce;
             });
             // END GRAVITY STUFFS
+            // XINPUT STUFFS
             window_event_listener(ev::keydown, move |ev| {
-                set_vel.update(|vel| {
-                    if ev.code() == "KeyD" || ev.code() == "KeyA" {
-                        if ev.code() == "KeyD" {
-                            vel.x += WALKSPEED;
-                        } else {
-                            vel.x -= WALKSPEED;
-                        }
-                        vel.x = vel.x.clamp(-WALKSPEED, WALKSPEED);
-                    }
-                });
+                match ev.code().as_str() {
+                    "KeyA" => set_lp.set(true),
+                    "KeyD" => set_rp.set(true),
+                    _ => {}
+                }
             });
+            window_event_listener(ev::keyup, move |ev| {
+                match ev.code().as_str() {
+                    "KeyA" => set_lp.set(false),
+                    "KeyD" => set_rp.set(false),
+                    _ => {}
+                }
+            });
+            let xinput = (rp.get() as i16) - (lp.get() as i16);
+            set_vel.update(|vel| {
+                if xinput != 0 {
+                    vel.x = xinput * WALKSPEED;
+                } else if grounded.get() {
+                    vel.x = 0;
+                }
+            });
+            // END XINPUT STUFFS
             set_pos.set(Pos { x: new_x, y: new_y,});
         }
     });
