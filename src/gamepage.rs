@@ -80,7 +80,7 @@ pub fn GamePage() -> impl IntoView {
         }
     });
     fn is_grounded(y: i16) -> bool {
-        // more usable grounded
+        // TODO: more usable grounded
         if y >= GROUND {
             true
         } else {
@@ -89,15 +89,16 @@ pub fn GamePage() -> impl IntoView {
     }
 
     view! {
-        <div
+        <button
             class="player"
             style:position="absolute"
             class:player-green=move || toggle.get()
             class:player-red=move || !toggle.get()
             style:top=move || format!("{}px", pos.get().y)
             style:left=move || format!("{}px", pos.get().x)
+            on:click=move |_| set_toggle.set(!toggle.get())
         >
-            <button on:click=move |_| set_toggle.set(!toggle.get())>67</button>
-        </div>
+            67
+        </button>
     }
 }
