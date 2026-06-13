@@ -220,7 +220,7 @@ fn normal_vel(pos: Pos, collis: &[Box]) -> Vel {
                     }
                 ).collect::<Vec<_>>()
             }
-        )
+        ) // is currently an iterator over EPoints (not borrowed)
     Vel {
         x: 67,
         y: 67,
