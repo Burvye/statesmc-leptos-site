@@ -16,6 +16,9 @@ struct Vel {
     x: i16,
     y: i16,
 }
+
+/// Box for the world
+/// just put in your corners c1 and c2
 #[derive(Clone, Copy)]
 struct Box {
     c1: Pos,
@@ -33,6 +36,8 @@ pub fn GamePage() -> impl IntoView {
     let (lp, set_lp) = signal(false);
     let (rp, set_rp) = signal(false);
 
+    // vec to store boxes to load into the world
+    // collis is meant to mean colliders (aabb colliders!!!!)
     let (collis, set_collis) = signal(Vec::new());
     set_collis.update(|vec| {vec.push(Box {
         c1: Pos { x: 0, y: 500 },
