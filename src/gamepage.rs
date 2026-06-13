@@ -4,6 +4,7 @@ use gloo_timers::future::TimeoutFuture;
 
 const GROUND: i16 = 500;
 const WALKSPEED: i16 = 10;
+const PBOUND: [i16; 2] = [50, 50];
 
 #[derive(Clone, Copy)]
 struct Pos {
@@ -43,7 +44,7 @@ pub fn GamePage() -> impl IntoView {
             set_grounded.set(is_grounded(new_y));
             // GRAVITY STUFFS
             if grounded.get() {
-                new_y = GROUND;
+                new_y -= gforce;
                 gforce = 0;
             }
             set_vel.update(|vel| {
@@ -79,7 +80,7 @@ pub fn GamePage() -> impl IntoView {
     });
     fn is_grounded(y: i16) -> bool {
         // TODO: more usable grounded
-        if y >= GROUND {
+        if (y - PBOUND[1]) >= GROUND {
             true
         } else {
             false
