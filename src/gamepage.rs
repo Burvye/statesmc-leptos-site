@@ -8,9 +8,25 @@ const PBOUND: [i16; 2] = [50, 50];
 
 #[derive(Clone, Copy)]
 struct Pos {
-    x: i16,
-    y: i16,
+    x: f32,
+    y: f32,
 }
+
+impl Pos {
+    fn sub(&self, op: &Pos) -> Pos {
+        Pos {
+            x: op.x - self.x,
+            y: op.y - self.y,
+        }
+    }
+    fn from_vector(vec: Vector) -> Pos {
+        Pos {
+            x: vec.x,
+            y: vec.y,
+        }
+    }
+}
+
 #[derive(Clone, Copy)]
 struct Vel {
     x: i16,
@@ -26,7 +42,7 @@ struct Box {
 }
 #[component]
 pub fn GamePage() -> impl IntoView {
-    let (pos, set_pos) = signal(Pos { x: 0, y: 0 });
+    let (pos, set_pos) = signal(Pos { x: 0.0, y: 0.0 });
     let (vel, set_vel) = signal(Vel {x: 0, y: 0 });
     // prevents the player from falling and allows them to jump
     let (grounded, set_grounded) = signal(false);
@@ -40,8 +56,8 @@ pub fn GamePage() -> impl IntoView {
     // collis is meant to mean colliders (aabb colliders!!!!)
     let (collis, set_collis) = signal(Vec::new());
     set_collis.update(|vec| {vec.push(Box {
-        c1: Pos { x: 0, y: 500 },
-        c2: Pos { x: 500, y: 550 },
+        c1: Pos { x: 0.0, y: 500.0 },
+        c2: Pos { x: 500.0, y: 550.0 },
     })});
 
     window_event_listener(ev::keydown, move |ev| {
@@ -56,8 +72,8 @@ pub fn GamePage() -> impl IntoView {
         loop {
             TimeoutFuture::new(16).await;
             let mut gforce = vel.get().y + 1;
-            let new_x = pos.get().x + vel.get().x;
-            let mut new_y = pos.get().y + gforce;
+            let new_x = pos.get().x.round() as i16 + vel.get().x;
+            let mut new_y = pos.get().y.round() as i16 + gforce;
             set_grounded.set(is_grounded(new_y));
             // GRAVITY STUFFS
             if grounded.get() {
@@ -92,7 +108,7 @@ pub fn GamePage() -> impl IntoView {
                 }
             });
             // END XINPUT STUFFS
-            set_pos.set(Pos { x: new_x, y: new_y,});
+            set_pos.set(Pos { x: new_x as f32, y: new_y as f32,});
         }
     });
 
@@ -100,7 +116,12 @@ pub fn GamePage() -> impl IntoView {
         <div>
             <For
                 each=move || collis.get()
-                key=|colli| (colli.c1.x, colli.c1.y, colli.c2.x, colli.c2.y)
+                key=|colli| (
+                    colli.c1.x.round() as i16,
+                    colli.c1.y.round() as i16,
+                    colli.c2.x.round() as i16,
+                    colli.c2.y.round() as i16,
+                )
                 let(colli)
             >
                 <div
@@ -128,16 +149,32 @@ pub fn GamePage() -> impl IntoView {
         </button>
     }
 }
+/// Stores the endpoints of an edge
 struct EPoints {
     p1: Pos,
     p2: Pos,
 }
-struct Edge {
-    ps: EPoints,
-    m: f32,
-    b: f32
+struct Vector {
+    x: f32,
+    y: f32,
 }
-fn normal_force(pos: Pos, collis: &[Box]) -> Vel {
+impl Vector {
+    fn dot(&self, ov: &Vector) -> f32 {
+        self.x * ov.x + self.y * ov.y
+    }
+    fn scale(&self, scalar: f32) -> Vector {
+        Vector { x: self.x * scalar, y: self.y * scalar }
+    }
+    fn add(&self, ov: &Vector) -> Vector {
+        Vector { x: self.x + ov.x, y: self.y + ov.y }
+    }
+    /// u should probably only use this on normalized pos
+    fn from_pos(pos: &Pos) -> Vector {
+        Vector { x: pos.x as f32, y: pos.y as f32 }
+    }
+}
+
+fn normal_vel(pos: Pos, collis: &[Box]) -> Vel {
     collis
         .iter()
         .map(
@@ -163,27 +200,62 @@ fn normal_force(pos: Pos, collis: &[Box]) -> Vel {
             }
         )
         .map(
-            |es| {
-                es
-                .into_iter()
+            |eps| {
+                eps
+                .iter()
                 .map(
-                    |e|
-                    {
-                        let slope: f32 = (e.p1.y-e.p2.y) as f32/(e.p1.x-e.p2.x) as f32;
-                        Edge {
-                            ps: e,
-                            m: slope,
-                            b: ((e.p1.y as f32)-slope*(e.p1.x as f32)) // intercept
+                    |ep| { // ep is &EPoints (edge endpoints)
+                        // TODO: logic here
+                        {
+                            let normed_pos: Pos = Pos {
+                                x: ep.p2.x-ep.p1.x,
+                                y: ep.p2.y-ep.p1.y,
+                            };
+                            (
+                                ep,
+                                Vector {
+                                    x: normed_pos.x as f32,
+                                    y: normed_pos.y as f32,
+                                }
+                            )
                         }
                     }
                 )
-                .collect::<[Edge; 4]>()
+                .collect::<[(EPoints, Vector)]>()
+            }
+        )
+        .map(
+            |epv| {
+                epv
+                    .iter()
+                    .map(
+                        |(ep, vec)| {
+                            // TODO: dot product of vec = 0
+                        }
+                    )
             }
         )
     Vel {
         x: 67,
         y: 67,
     }
+}
+
+/// Finds the ppos point if projected on the edge of eps
+/// This also just so happens to be the nearest point
+fn projected_point(ppos: &Pos, eps: &EPoints) -> Pos {
+    let edgevec: Vector = Vector::from_pos(&eps.p2.sub(&eps.p1));
+    let playvec: Vector = Vector::from_pos(&ppos.sub(&eps.p1));
+    Pos::from_vector(
+        Vector::from_pos(&eps.p1)
+        .add(
+            &edgevec
+            .scale(
+                (playvec.dot(&edgevec) / edgevec.dot(&edgevec))
+                .clamp(0.0, 1.0)
+            )
+        )
+    )
 }
 
 fn is_grounded(y: i16) -> bool {
