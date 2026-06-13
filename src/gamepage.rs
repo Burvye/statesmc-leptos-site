@@ -128,7 +128,58 @@ pub fn GamePage() -> impl IntoView {
         </button>
     }
 }
-
+struct Edge {
+    p1: Pos,
+    p2: Pos,
+}
+fn normal_force(pos: Pos, collis: &[Box]) -> Vel {
+    collis
+        .iter()
+        .map(
+            |colli|
+            [
+                colli.c1,
+                Pos {x: colli.c2.x, y: colli.c1.y },
+                colli.c2,
+                Pos {x: colli.c1.x, y: colli.c2.y }
+            ]
+        )
+        .map(
+            |cs| {
+                (0..=3)
+                    .into_iter()
+                    .map(
+                        |c|
+                        Edge {
+                            p1: cs[c],
+                            p2: cs[(c + 1) % 4]
+                        })
+                    .collect::<[Edge; 4]>()
+            }
+        )
+        .map(
+            |es| {
+                es
+                .into_iter()
+                .map(
+                    |e|
+                    {
+                        let slope = (e.p1.y-e.p2.y)/(e.p1.x-e.p2.x);
+                        (
+                            e,
+                            slope,
+                            (e.p1.y-slope*e.p1.x) // intercept
+                        )
+                    }
+                )
+                .collect::<[(Edge, i16, i16); 4]>()
+            }
+        )
+    Vel {
+        x: 67,
+        y: 67,
+    }
+}
 
 fn is_grounded(y: i16) -> bool {
     // TODO: more usable grounded
