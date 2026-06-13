@@ -128,9 +128,14 @@ pub fn GamePage() -> impl IntoView {
         </button>
     }
 }
-struct Edge {
+struct EPoints {
     p1: Pos,
     p2: Pos,
+}
+struct Edge {
+    ps: EPoints,
+    m: f32,
+    b: f32
 }
 fn normal_force(pos: Pos, collis: &[Box]) -> Vel {
     collis
@@ -150,11 +155,11 @@ fn normal_force(pos: Pos, collis: &[Box]) -> Vel {
                     .into_iter()
                     .map(
                         |c|
-                        Edge {
+                        EPoints {
                             p1: cs[c],
                             p2: cs[(c + 1) % 4]
                         })
-                    .collect::<[Edge; 4]>()
+                    .collect::<[EPoints; 4]>()
             }
         )
         .map(
@@ -164,15 +169,15 @@ fn normal_force(pos: Pos, collis: &[Box]) -> Vel {
                 .map(
                     |e|
                     {
-                        let slope = (e.p1.y-e.p2.y)/(e.p1.x-e.p2.x);
-                        (
-                            e,
-                            slope,
-                            (e.p1.y-slope*e.p1.x) // intercept
-                        )
+                        let slope: f32 = (e.p1.y-e.p2.y) as f32/(e.p1.x-e.p2.x) as f32;
+                        Edge {
+                            ps: e,
+                            m: slope,
+                            b: ((e.p1.y as f32)-slope*(e.p1.x as f32)) // intercept
+                        }
                     }
                 )
-                .collect::<[(Edge, i16, i16); 4]>()
+                .collect::<[Edge; 4]>()
             }
         )
     Vel {
