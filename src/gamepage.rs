@@ -198,28 +198,29 @@ fn normal_vel(pos: Pos, collis: &[Box]) -> Vel {
                             p1: cs[c],
                             p2: cs[(c + 1) % 4]
                         })
-                    .collect::<[EPoints; 4]>()
+                    .collect::<Vec<EPoints>>()
             }
         )
-        .filter_map(
+        .flat_map(
             |eps| {
-                eps.iter().map(
-                    |ep| { // ep is &EPoints
-                        let ppos = projected_point(&pos, ep);
+                eps.into_iter().filter_map(
+                    |ep| {
+                        let ppos = projected_point(&pos, &ep);
                         // AABB check
-                        if (
-                            67==67
-                            // check if ppos is within the bounds of the player
-                        ) {
+                        if
+                            (pos.x - PBOUND[0] as f32) < ppos.x &&
+                            (pos.x + PBOUND[0] as f32) > ppos.x &&
+                            (pos.y - PBOUND[1] as f32) < ppos.y &&
+                            (pos.y + PBOUND[1] as f32) > ppos.y
+                         {
                             Some(ep)
                         } else {
                             None
                         }
-
                     }
-                )
+                ).collect::<Vec<_>>()
             }
-        ) // then we get all the vectors and add them up
+        )
     Vel {
         x: 67,
         y: 67,
