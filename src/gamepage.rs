@@ -16,16 +16,28 @@ struct Vel {
     x: i16,
     y: i16,
 }
+#[derive(Clone, Copy)]
+struct Box {
+    c1: Pos,
+    c2: Pos,
+}
 #[component]
 pub fn GamePage() -> impl IntoView {
     let (pos, set_pos) = signal(Pos { x: 0, y: 0 });
     let (vel, set_vel) = signal(Vel {x: 0, y: 0 });
+    // prevents the player from falling and allows them to jump
     let (grounded, set_grounded) = signal(false);
     // this controls the player button thing
     let (toggle, set_toggle) = signal(false);
     // to detect if left or right pressed
     let (lp, set_lp) = signal(false);
     let (rp, set_rp) = signal(false);
+
+    let (collis, set_collis) = signal(Vec::new());
+    set_collis.update(|vec| {vec.push(Box {
+        c1: Pos { x: 0, y: 500 },
+        c2: Pos { x: 500, y: 550 },
+    })});
 
     window_event_listener(ev::keydown, move |ev| {
         if ev.code() == "Space" && !ev.repeat() && grounded.get() {
@@ -78,16 +90,26 @@ pub fn GamePage() -> impl IntoView {
             set_pos.set(Pos { x: new_x, y: new_y,});
         }
     });
-    fn is_grounded(y: i16) -> bool {
-        // TODO: more usable grounded
-        if (y - PBOUND[1]) >= GROUND {
-            true
-        } else {
-            false
-        }
-    }
 
     view! {
+        <div>
+            <For
+                each=move || collis.get()
+                key=|colli| (colli.c1.x, colli.c1.y, colli.c2.x, colli.c2.y)
+                let(colli)
+            >
+                <div
+                    class="grass"
+                    style:position="absolute"
+                    style:height=move || format!("{}px", colli.c2.y - colli.c1.y)
+                    style:width=move || format!("{}px", colli.c2.x - colli.c1.x)
+                    style:top=move || format!("{}px", colli.c1.y)
+                    style:left=move || format!("{}px", colli.c1.x)
+                >
+                    67
+                </div>
+            </For>
+        </div>
         <button
             class="player"
             style:position="absolute"
@@ -99,5 +121,15 @@ pub fn GamePage() -> impl IntoView {
         >
             67
         </button>
+    }
+}
+
+
+fn is_grounded(y: i16) -> bool {
+    // TODO: more usable grounded
+    if (y + PBOUND[1]) >= GROUND {
+        true
+    } else {
+        false
     }
 }
