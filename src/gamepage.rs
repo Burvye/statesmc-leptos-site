@@ -141,6 +141,8 @@ pub fn GamePage() -> impl IntoView {
             style:position="absolute"
             class:player-green=move || toggle.get()
             class:player-red=move || !toggle.get()
+            // TODO: check if the player pos actually represents
+            // the center or else we cooked
             style:top=move || format!("{}px", pos.get().y)
             style:left=move || format!("{}px", pos.get().x)
             on:click=move |_| set_toggle.set(!toggle.get())
@@ -199,42 +201,25 @@ fn normal_vel(pos: Pos, collis: &[Box]) -> Vel {
                     .collect::<[EPoints; 4]>()
             }
         )
-        .map(
+        .filter_map(
             |eps| {
-                eps
-                .iter()
-                .map(
-                    |ep| { // ep is &EPoints (edge endpoints)
-                        // TODO: logic here
-                        {
-                            let normed_pos: Pos = Pos {
-                                x: ep.p2.x-ep.p1.x,
-                                y: ep.p2.y-ep.p1.y,
-                            };
-                            (
-                                ep,
-                                Vector {
-                                    x: normed_pos.x as f32,
-                                    y: normed_pos.y as f32,
-                                }
-                            )
+                eps.iter().map(
+                    |ep| { // ep is &EPoints
+                        let ppos = projected_point(&pos, ep);
+                        // AABB check
+                        if (
+                            67==67
+                            // check if ppos is within the bounds of the player
+                        ) {
+                            Some(ep)
+                        } else {
+                            None
                         }
+
                     }
                 )
-                .collect::<[(EPoints, Vector)]>()
             }
-        )
-        .map(
-            |epv| {
-                epv
-                    .iter()
-                    .map(
-                        |(ep, vec)| {
-                            // TODO: dot product of vec = 0
-                        }
-                    )
-            }
-        )
+        ) // then we get all the vectors and add them up
     Vel {
         x: 67,
         y: 67,
@@ -243,19 +228,12 @@ fn normal_vel(pos: Pos, collis: &[Box]) -> Vel {
 
 /// Finds the ppos point if projected on the edge of eps
 /// This also just so happens to be the nearest point
-fn projected_point(ppos: &Pos, eps: &EPoints) -> Pos {
-    let edgevec: Vector = Vector::from_pos(&eps.p2.sub(&eps.p1));
-    let playvec: Vector = Vector::from_pos(&ppos.sub(&eps.p1));
-    Pos::from_vector(
-        Vector::from_pos(&eps.p1)
-        .add(
-            &edgevec
-            .scale(
-                (playvec.dot(&edgevec) / edgevec.dot(&edgevec))
-                .clamp(0.0, 1.0)
-            )
-        )
-    )
+fn projected_point(pos: &Pos, eps: &EPoints) -> Pos {
+    let (edgevec, playvec) = (
+        Vector::from_pos(&eps.p2.sub(&eps.p1)),
+        Vector::from_pos(&pos.sub(&eps.p1))
+    );
+    Pos::from_vector(Vector::from_pos(&eps.p1).add(&edgevec.scale(playvec.dot(&edgevec) / edgevec.dot(&edgevec))))
 }
 
 fn is_grounded(y: i16) -> bool {
