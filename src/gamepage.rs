@@ -176,56 +176,56 @@ impl Vector {
     }
 }
 
-fn normal_vel(pos: Pos, collis: &[Box]) -> Vel {
-    collis
-        .iter()
-        .map(
-            |colli|
-            [
-                colli.c1,
-                Pos {x: colli.c2.x, y: colli.c1.y },
-                colli.c2,
-                Pos {x: colli.c1.x, y: colli.c2.y }
-            ]
-        )
-        .map(
-            |cs| {
-                (0..=3)
-                    .into_iter()
-                    .map(
-                        |c|
-                        EPoints {
-                            p1: cs[c],
-                            p2: cs[(c + 1) % 4]
-                        })
-                    .collect::<Vec<EPoints>>()
-            }
-        )
-        .flat_map(
-            |eps| {
-                eps.into_iter().filter_map(
-                    |ep| {
-                        let ppos = projected_point(&pos, &ep);
-                        // AABB check
-                        if
-                            (pos.x - PBOUND[0] as f32) < ppos.x &&
-                            (pos.x + PBOUND[0] as f32) > ppos.x &&
-                            (pos.y - PBOUND[1] as f32) < ppos.y &&
-                            (pos.y + PBOUND[1] as f32) > ppos.y
-                         {
-                            Some(ep)
-                        } else {
-                            None
-                        }
-                    }
-                ).collect::<Vec<_>>()
-            }
-        ) // is currently an iterator over EPoints (not borrowed)
-    Vel {
-        x: 67,
-        y: 67,
-    }
-}
+// fn normal_vel(pos: Pos, collis: &[Box]) -> Vel {
+//     collis
+//         .iter()
+//         .map(
+//             |colli|
+//             [
+//                 colli.c1,
+//                 Pos {x: colli.c2.x, y: colli.c1.y },
+//                 colli.c2,
+//                 Pos {x: colli.c1.x, y: colli.c2.y }
+//             ]
+//         )
+//         .map(
+//             |cs| {
+//                 (0..=3)
+//                     .into_iter()
+//                     .map(
+//                         |c|
+//                         EPoints {
+//                             p1: cs[c],
+//                             p2: cs[(c + 1) % 4]
+//                         })
+//                     .collect::<Vec<EPoints>>()
+//             }
+//         )
+//         .flat_map(
+//             |eps| {
+//                 eps.into_iter().filter_map(
+//                     |ep| {
+//                         let ppos = projected_point(&pos, &ep);
+//                         // AABB check
+//                         if
+//                             (pos.x - PBOUND[0] as f32) < ppos.x &&
+//                             (pos.x + PBOUND[0] as f32) > ppos.x &&
+//                             (pos.y - PBOUND[1] as f32) < ppos.y &&
+//                             (pos.y + PBOUND[1] as f32) > ppos.y
+//                          {
+//                             Some(ep)
+//                         } else {
+//                             None
+//                         }
+//                     }
+//                 ).collect::<Vec<_>>()
+//             }
+//         ) // is currently an iterator over the surviving EPoints (not borrowed)
+//     Vel {
+//         x: 67,
+//         y: 67,
+//     }
+// }
 
 /// Finds the ppos point if projected on the edge of eps
 /// This also just so happens to be the nearest point

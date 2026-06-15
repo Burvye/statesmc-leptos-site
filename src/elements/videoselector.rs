@@ -85,7 +85,7 @@ fn video_choices() -> Vec<Video> {
 /// Match an ID to a video URL.
 fn video_url_for(id: i32) -> &'static str {
     match id {
-        1 => "https://www.youtube.com/embed/3ZTdoWPDiOc?si=33aJbEe2FcbV5Fga",
+        1 => "https://www.youtube.com/embed/Rwdd3cx36XU?si=4ZgErn_bfe3_QvyK",
         2 => "https://www.youtube.com/embed/CdYtavp2h24?si=oBFzoC4V169_UVxp",
         3 => "https://www.youtube.com/embed/Lcupxa72cLk?si=s2IgYDHDwJKvt4rB",
         4 => "https://www.youtube.com/embed/cqd00g20bkI?si=znIN52dyM1A07JH9",
